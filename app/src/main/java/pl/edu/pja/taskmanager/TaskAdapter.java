@@ -25,7 +25,8 @@ public class TaskAdapter extends ListAdapter<Task, TaskAdapter.TaskViewHolder> {
         public boolean areContentsTheSame(@NonNull Task oldItem, @NonNull Task newItem) {
             return oldItem.getTitle().equals(newItem.getTitle()) &&
                     oldItem.getDescription().equals(newItem.getDescription()) &&
-                    oldItem.getPriority() == newItem.getPriority();
+                    oldItem.getPriority() == newItem.getPriority() &&
+                    oldItem.getDate().equals(newItem.getDate());
         }
     };
 
@@ -42,6 +43,7 @@ public class TaskAdapter extends ListAdapter<Task, TaskAdapter.TaskViewHolder> {
         holder.title.setText(task.getTitle());
         holder.description.setText(task.getDescription());
         holder.priority.setText(String.valueOf(task.getPriority()));
+        holder.date.setText(String.valueOf(task.getDate()));
     }
 
     public Task getTask(int position){
@@ -49,13 +51,14 @@ public class TaskAdapter extends ListAdapter<Task, TaskAdapter.TaskViewHolder> {
     }
 
     public class TaskViewHolder extends RecyclerView.ViewHolder{
-        TextView title, description, priority;
+        TextView title, description, priority, date;
         public TaskViewHolder(@NonNull View itemView) {
             super(itemView);
 
             title = itemView.findViewById(R.id.title);
             description = itemView.findViewById(R.id.description);
             priority = itemView.findViewById(R.id.priority);
+            date = itemView.findViewById(R.id.date);
         }
     }
 }

@@ -18,6 +18,7 @@ import android.widget.Toast;
 
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 
+import java.sql.Date;
 import java.util.List;
 
 public class MainActivity extends AppCompatActivity {
@@ -87,6 +88,7 @@ public class MainActivity extends AppCompatActivity {
                     intent.putExtra(NewTaskActivity.EXTRA_TITLE, taskAdapter.getTask(viewHolder.getAdapterPosition()).getTitle());
                     intent.putExtra(NewTaskActivity.EXTRA_DESCRIPTION, taskAdapter.getTask(viewHolder.getAdapterPosition()).getDescription());
                     intent.putExtra(NewTaskActivity.EXTRA_PRIORITY, taskAdapter.getTask(viewHolder.getAdapterPosition()).getPriority());
+                    intent.putExtra(NewTaskActivity.EXTRA_DATE, taskAdapter.getTask(viewHolder.getAdapterPosition()).getDate());
 
                     startActivityForResult(intent, EDIT_TASK_REQUEST_CODE);
 
@@ -103,8 +105,9 @@ public class MainActivity extends AppCompatActivity {
             String title = data.getStringExtra(NewTaskActivity.EXTRA_TITLE);
             String description = data.getStringExtra(NewTaskActivity.EXTRA_DESCRIPTION);
             int priority = data.getIntExtra(NewTaskActivity.EXTRA_PRIORITY, 1);
+            String date = data.getStringExtra(NewTaskActivity.EXTRA_DATE);
 
-            Task task = new Task(title, description, priority);
+            Task task = new Task(title, description, priority, date);
             taskViewModel.insert(task);
 
             Toast.makeText(this, "Task saved", Toast.LENGTH_SHORT).show();
@@ -117,8 +120,9 @@ public class MainActivity extends AppCompatActivity {
             String title = data.getStringExtra(NewTaskActivity.EXTRA_TITLE);
             String description = data.getStringExtra(NewTaskActivity.EXTRA_DESCRIPTION);
             int priority = data.getIntExtra(NewTaskActivity.EXTRA_PRIORITY, 1);
+            String date = data.getStringExtra(NewTaskActivity.EXTRA_DATE);
 
-            Task task = new Task(title, description, priority);
+            Task task = new Task(title, description, priority, date);
             task.setId(id);
             taskViewModel.update(task);
             Toast.makeText(this, "Task updated!", Toast.LENGTH_SHORT).show();

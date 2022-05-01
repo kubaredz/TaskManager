@@ -16,11 +16,13 @@ public class NewTaskActivity extends AppCompatActivity {
     public static final String EXTRA_DESCRIPTION = "pl.edu.pja.taskmanager.EXTRA_DESCRIPTION";
     public static final String EXTRA_PRIORITY = "pl.edu.pja.taskmanager.EXTRA_PRIORITY";
     public static final String EXTRA_ID = "pl.edu.pja.taskmanager.EXTRA_ID";
+    public static final String EXTRA_DATE = "pl.edu.pja.taskmanager.EXTRA_DATE";
 
 
     private EditText titleField, descriptionField;
     private Button saveTask;
     private NumberPicker priorityField;
+    private EditText dateField;
 
     @Override
     protected void onCreate(Bundle savedInstanceState){
@@ -30,6 +32,8 @@ public class NewTaskActivity extends AppCompatActivity {
         titleField = findViewById(R.id.title);
         descriptionField = findViewById(R.id.description);
         priorityField = findViewById(R.id.priority);
+        dateField = findViewById(R.id.date);
+
         saveTask = findViewById(R.id.saveTask);
 
         priorityField.setMinValue(1);
@@ -45,6 +49,7 @@ public class NewTaskActivity extends AppCompatActivity {
             titleField.setText(editIntent.getStringExtra(EXTRA_TITLE));
             descriptionField.setText(editIntent.getStringExtra(EXTRA_DESCRIPTION));
             priorityField.setValue(editIntent.getIntExtra(EXTRA_PRIORITY, 1));
+            dateField.setText(editIntent.getStringExtra(EXTRA_DATE));
         }else {
             setTitle("Adding task");
         }
@@ -55,6 +60,7 @@ public class NewTaskActivity extends AppCompatActivity {
                 String title = titleField.getText().toString();
                 String description = descriptionField.getText().toString();
                 int priority = priorityField.getValue();
+                String date = dateField.getText().toString();
 
                 if(title.trim().isEmpty() || description.trim().isEmpty()){
                     Toast.makeText(NewTaskActivity.this, "Empty fields are not allowed",
@@ -66,6 +72,7 @@ public class NewTaskActivity extends AppCompatActivity {
                 dataIntent.putExtra(EXTRA_TITLE, title);
                 dataIntent.putExtra(EXTRA_DESCRIPTION, description);
                 dataIntent.putExtra(EXTRA_PRIORITY, priority);
+                dataIntent.putExtra(EXTRA_DATE, date);
 
                 int id = getIntent().getIntExtra(EXTRA_ID, -1);
                 if (id != -1){

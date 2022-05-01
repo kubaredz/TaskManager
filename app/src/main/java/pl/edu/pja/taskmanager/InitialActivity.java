@@ -20,6 +20,6 @@ public class InitialActivity extends AppCompatActivity {
                     startActivity(new Intent(InitialActivity.this, MainActivity.class));
                     finish();
                 }
-        }, 5000);
+        }, 1000);
     }
 }
