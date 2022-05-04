@@ -94,7 +94,6 @@ public class MainActivity extends AppCompatActivity {
             public void onSwiped(@NonNull RecyclerView.ViewHolder viewHolder, int direction) {
                 if (direction == ItemTouchHelper.RIGHT){
                     taskViewModel.delete(taskAdapter.getTask(viewHolder.getAdapterPosition()));
-                    Toast.makeText(MainActivity.this, "Task deleted", Toast.LENGTH_SHORT).show();
                 }else {
                     Intent intent = new Intent(MainActivity.this, NewTaskActivity.class);
                     intent.putExtra(NewTaskActivity.EXTRA_ID, taskAdapter.getTask(viewHolder.getAdapterPosition()).getId());
@@ -134,13 +133,9 @@ public class MainActivity extends AppCompatActivity {
             Task task = new Task(title, description, priority, progress, date1.getTime());
             taskViewModel.insert(task);
 
-            Toast.makeText(this, "Task saved", Toast.LENGTH_SHORT).show();
         }else if(requestCode == EDIT_TASK_REQUEST_CODE && resultCode == RESULT_OK){
             int id = data.getIntExtra(NewTaskActivity.EXTRA_ID, -1);
-            if (id == -1){
-                Toast.makeText(this, "Task can't be updated", Toast.LENGTH_SHORT).show();
-                return;
-            }
+
             String title = data.getStringExtra(NewTaskActivity.EXTRA_TITLE);
             String description = data.getStringExtra(NewTaskActivity.EXTRA_DESCRIPTION);
             int priority = data.getIntExtra(NewTaskActivity.EXTRA_PRIORITY, 1);
@@ -158,11 +153,6 @@ public class MainActivity extends AppCompatActivity {
             Task task = new Task(title, description, priority, progress,dateToConvert.getTime());
             task.setId(id);
             taskViewModel.update(task);
-            Toast.makeText(this, "Task updated!", Toast.LENGTH_SHORT).show();
-
-        }else {
-            Toast.makeText(this, "Task not saved", Toast.LENGTH_SHORT).show();
-            return;
         }
     }
 
