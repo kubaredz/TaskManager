@@ -6,9 +6,7 @@ import androidx.room.Delete;
 import androidx.room.Insert;
 import androidx.room.Query;
 import androidx.room.Update;
-
 import java.util.List;
-
 import pl.edu.pja.taskmanager.model.Task;
 
 @Dao
@@ -25,7 +23,4 @@ public interface TaskDAO {
 
     @Delete
     public void delete(Task task);
-
-    @Query("DELETE FROM task")
-    public void deleteAll();
 }

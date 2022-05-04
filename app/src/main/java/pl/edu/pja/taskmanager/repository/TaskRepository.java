@@ -20,13 +20,10 @@ public class TaskRepository {
         TaskDatabase taskDatabase = TaskDatabase.buildApplication(core);
         taskDAO = taskDatabase.taskDAO();
         taskList = taskDAO.getAllTasks();
+
     }
     public LiveData<List<Task>> getAllTasks(){
         return taskList;
-    }
-
-    public void deleteAllTasks(){
-        new DeleteAllAsyncTask(taskDAO).execute();
     }
 
     public void insertTask(Task task){
@@ -39,19 +36,6 @@ public class TaskRepository {
         new DeleteAsyncTask(taskDAO).execute(task);
     }
 
-    private static class DeleteAllAsyncTask extends AsyncTask<Void, Void, Void>{
-
-        private TaskDAO taskDAO;
-
-        public DeleteAllAsyncTask(TaskDAO taskDAO){
-            this.taskDAO = taskDAO;
-        }
-        @Override
-        protected Void doInBackground(Void... tasks) {
-            taskDAO.deleteAll();
-            return null;
-        }
-    }
 
     private static class InsertAsyncTask extends AsyncTask<Task, Void, Void>{
 

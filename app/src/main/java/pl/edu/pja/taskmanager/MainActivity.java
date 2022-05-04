@@ -2,6 +2,7 @@ package pl.edu.pja.taskmanager;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+import androidx.annotation.RequiresApi;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModelProvider;
@@ -10,14 +11,22 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import android.content.Intent;
+import android.os.Build;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.Toast;
 
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 
+import java.time.Instant;
+import java.time.LocalDate;
+import java.time.LocalDateTime;
+import java.time.LocalTime;
+import java.time.ZoneId;
 import java.util.Date;
+import java.util.GregorianCalendar;
 import java.util.List;
+import java.util.TimeZone;
 
 import pl.edu.pja.taskmanager.adapter.TaskAdapter;
 import pl.edu.pja.taskmanager.model.Task;
@@ -41,8 +50,8 @@ public class MainActivity extends AppCompatActivity {
         setContentView(R.layout.activity_main);
 
         // TODO: 30/04/2022 refactor button name
-        recyclerView = findViewById(R.id.recyclerview);
-        floatingActionButton = findViewById(R.id.floatingActionButton);
+        recyclerView = findViewById(R.id.itemList);
+        floatingActionButton = findViewById(R.id.addNewTaskButton);
 
         // TODO : 30/04/2022 change place of methods
         recyclerView.setHasFixedSize(true);
@@ -103,6 +112,7 @@ public class MainActivity extends AppCompatActivity {
         }).attachToRecyclerView(recyclerView);
     }
 
+    @RequiresApi(api = Build.VERSION_CODES.O)
     @Override
     protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
@@ -115,10 +125,13 @@ public class MainActivity extends AppCompatActivity {
             int month = data.getIntExtra(NewTaskActivity.EXTRA_MONTH,1);
             int day = data.getIntExtra(NewTaskActivity.EXTRA_DAY,25);
 //            String date = data.getStringExtra(NewTaskActivity.EXTRA_DATE);
-            Date date = new Date(year, month, day);
+
+            LocalDate date = LocalDate.of(year, month, day);
+            ZoneId defaultZoneId = ZoneId.systemDefault();
+            Date date1 = Date.from(date.atStartOfDay(defaultZoneId).toInstant());
             int progress = data.getIntExtra(NewTaskActivity.EXTRA_PROGRESS, 0);
 
-            Task task = new Task(title, description, priority, progress, date.getTime());
+            Task task = new Task(title, description, priority, progress, date1.getTime());
             taskViewModel.insert(task);
 
             Toast.makeText(this, "Task saved", Toast.LENGTH_SHORT).show();
@@ -134,10 +147,15 @@ public class MainActivity extends AppCompatActivity {
             int year = data.getIntExtra(NewTaskActivity.EXTRA_YEAR,2000);
             int month = data.getIntExtra(NewTaskActivity.EXTRA_MONTH,1);
             int day = data.getIntExtra(NewTaskActivity.EXTRA_DAY,25);
+            int progress = data.getIntExtra(NewTaskActivity.EXTRA_PROGRESS, 1);
+
 //            String date = data.getStringExtra(NewTaskActivity.EXTRA_DATE);
             Date date = new Date(year, month, day);
-            int progress = data.getIntExtra(NewTaskActivity.EXTRA_PROGRESS, 0);
-            Task task = new Task(title, description, priority, progress,date.getTime());
+
+            GregorianCalendar calendar = new GregorianCalendar();
+            calendar.setGregorianChange(date);
+            Date dateToConvert = calendar.getTime();
+            Task task = new Task(title, description, priority, progress,dateToConvert.getTime());
             task.setId(id);
             taskViewModel.update(task);
             Toast.makeText(this, "Task updated!", Toast.LENGTH_SHORT).show();
@@ -146,5 +164,20 @@ public class MainActivity extends AppCompatActivity {
             Toast.makeText(this, "Task not saved", Toast.LENGTH_SHORT).show();
             return;
         }
+    }
+
+    @RequiresApi(api = Build.VERSION_CODES.O)
+    public LocalDateTime nowDate(long time) {
+        LocalDateTime triggerTime =
+                LocalDateTime.ofInstant(Instant.ofEpochMilli(time),
+                        TimeZone.getDefault().toZoneId());
+        return triggerTime;
+    }
+
+    @RequiresApi(api = Build.VERSION_CODES.O)
+    public Long changeTypeOfData(LocalDateTime time){
+        ZoneId zoneId = ZoneId.systemDefault();
+        time = time.with(LocalTime.of(0,0));
+        return time.atZone(zoneId).toInstant().toEpochMilli();
     }
 }

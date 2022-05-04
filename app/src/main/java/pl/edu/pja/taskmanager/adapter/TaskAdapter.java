@@ -4,7 +4,6 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
-import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.DiffUtil;
 import androidx.recyclerview.widget.ListAdapter;
 import androidx.recyclerview.widget.RecyclerView;
@@ -14,6 +13,7 @@ import pl.edu.pja.taskmanager.model.Task;
 
 public class TaskAdapter extends ListAdapter<Task, TaskAdapter.TaskViewHolder> {
 
+    private static final DiffUtil.ItemCallback<Task> TASK_DIFFERENCE;
     private static final String TITLE = "Tytul: ";
     private static final String DESCRIPTION = "Opis: ";
     private static final String PRIORITY = "Priorytet: ";
@@ -21,7 +21,7 @@ public class TaskAdapter extends ListAdapter<Task, TaskAdapter.TaskViewHolder> {
     private static final String DATE = "Data do: ";
 
     public TaskAdapter() {
-        super(DIFF_CALLBACK);
+        super(TASK_DIFFERENCE);
     }
 
     public Task getTask(int position){
@@ -54,21 +54,23 @@ public class TaskAdapter extends ListAdapter<Task, TaskAdapter.TaskViewHolder> {
         holder.date.setText(DATE + date1.getDay() + "-" + date1.getMonth()  +"-2022");
     }
 
-    private static final DiffUtil.ItemCallback<Task> DIFF_CALLBACK = new DiffUtil.ItemCallback<Task>() {
-        @Override
-        public boolean areItemsTheSame(Task oldItem, Task newItem) {
-            return oldItem.getId() == newItem.getId();
-        }
+    static {
+        TASK_DIFFERENCE = new DiffUtil.ItemCallback<Task>() {
+            @Override
+            public boolean areItemsTheSame(Task oldItem, Task newItem) {
+                return oldItem.getId() == newItem.getId();
+            }
 
-        @Override
-        public boolean areContentsTheSame(Task oldItem, Task newItem) {
-            return oldItem.getTitle().equals(newItem.getTitle()) &&
-                    oldItem.getDescription().equals(newItem.getDescription()) &&
-                    oldItem.getPriority() == newItem.getPriority() &&
-                    oldItem.getProgress() == newItem.getProgress() &&
-                    oldItem.getDate().equals(newItem.getDate());
-        }
-    };
+            @Override
+            public boolean areContentsTheSame(Task oldItem, Task newItem) {
+                return oldItem.getTitle().equals(newItem.getTitle()) &&
+                        oldItem.getDescription().equals(newItem.getDescription()) &&
+                        oldItem.getPriority() == newItem.getPriority() &&
+                        oldItem.getProgress() == newItem.getProgress() &&
+                        oldItem.getDate().equals(newItem.getDate());
+            }
+        };
+    }
 
     @Override
     public TaskViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
