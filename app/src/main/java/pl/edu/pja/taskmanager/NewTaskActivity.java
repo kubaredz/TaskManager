@@ -50,11 +50,11 @@ public class NewTaskActivity extends AppCompatActivity {
 
 
         getSupportActionBar().setHomeAsUpIndicator(R.drawable.ic_baseline_close_24);
-        setTitle("Add note");
+        setTitle("Dodaj zadanie");
 
         Intent editIntent = getIntent();
         if (editIntent.hasExtra(EXTRA_ID)){
-            setTitle("Edit task");
+            setTitle("Edytuj zadanie");
             titleField.setText(editIntent.getStringExtra(EXTRA_TITLE));
             descriptionField.setText(editIntent.getStringExtra(EXTRA_DESCRIPTION));
             priorityField.setValue(editIntent.getIntExtra(EXTRA_PRIORITY, 1));
@@ -63,7 +63,7 @@ public class NewTaskActivity extends AppCompatActivity {
 //            tvw.setText("Selected Date: "+ picker.getDayOfMonth()+"/"+ (picker.getMonth() + 1)+"/"+picker.getYear());
 
         }else {
-            setTitle("Adding task");
+            setTitle("Dodaj zadanie");
         }
 
         saveTask.setOnClickListener(new View.OnClickListener() {
@@ -76,11 +76,6 @@ public class NewTaskActivity extends AppCompatActivity {
                 //check
                 int progress = Integer.parseInt(progressField.getText().toString());
 
-                if(title.trim().isEmpty() || description.trim().isEmpty()){
-                    Toast.makeText(NewTaskActivity.this, "Empty fields are not allowed",
-                            Toast.LENGTH_LONG).show();
-                    return;
-                }
 
                 int year = dateField.getYear();
                 int month = dateField.getMonth();
