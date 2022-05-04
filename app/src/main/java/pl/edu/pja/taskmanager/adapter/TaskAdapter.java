@@ -14,7 +14,7 @@ import pl.edu.pja.taskmanager.model.Task;
 public class TaskAdapter extends ListAdapter<Task, TaskAdapter.TaskViewHolder> {
 
     private static final DiffUtil.ItemCallback<Task> TASK_DIFFERENCE;
-    private static final String TITLE = "Tytul: ";
+    private static final String TITLE = "Tytuł: ";
     private static final String DESCRIPTION = "Opis: ";
     private static final String PRIORITY = "Priorytet: ";
     private static final String PROGRESS = "Progres: ";
