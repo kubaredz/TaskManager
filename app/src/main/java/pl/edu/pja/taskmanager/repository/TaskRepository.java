@@ -1,4 +1,4 @@
-package pl.edu.pja.taskmanager;
+package pl.edu.pja.taskmanager.repository;
 
 import android.app.Application;
 import android.os.AsyncTask;
@@ -6,6 +6,10 @@ import android.os.AsyncTask;
 import androidx.lifecycle.LiveData;
 
 import java.util.List;
+
+import pl.edu.pja.taskmanager.db.TaskDAO;
+import pl.edu.pja.taskmanager.db.TaskDatabase;
+import pl.edu.pja.taskmanager.model.Task;
 
 public class TaskRepository {
     private TaskDAO taskDAO;

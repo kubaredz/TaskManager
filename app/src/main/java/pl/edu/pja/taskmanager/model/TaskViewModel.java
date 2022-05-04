@@ -1,4 +1,4 @@
-package pl.edu.pja.taskmanager;
+package pl.edu.pja.taskmanager.model;
 
 import android.app.Application;
 
@@ -7,6 +7,9 @@ import androidx.lifecycle.AndroidViewModel;
 import androidx.lifecycle.LiveData;
 
 import java.util.List;
+
+import pl.edu.pja.taskmanager.model.Task;
+import pl.edu.pja.taskmanager.repository.TaskRepository;
 
 public class TaskViewModel extends AndroidViewModel {
 

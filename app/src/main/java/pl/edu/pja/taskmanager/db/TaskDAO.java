@@ -1,4 +1,4 @@
-package pl.edu.pja.taskmanager;
+package pl.edu.pja.taskmanager.db;
 
 import androidx.lifecycle.LiveData;
 import androidx.room.Dao;
@@ -9,10 +9,12 @@ import androidx.room.Update;
 
 import java.util.List;
 
+import pl.edu.pja.taskmanager.model.Task;
+
 @Dao
 public interface TaskDAO {
 
-    @Query("SELECT * FROM task ORDER BY date ASC")
+    @Query("SELECT * FROM task ORDER by date ASC")
     LiveData<List<Task>> getAllTasks();
 
     @Insert

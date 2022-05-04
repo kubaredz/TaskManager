@@ -1,8 +1,10 @@
-package pl.edu.pja.taskmanager;
+package pl.edu.pja.taskmanager.model;
 
 import androidx.room.Entity;
 import androidx.room.PrimaryKey;
+import androidx.room.TypeConverter;
 
+import java.text.SimpleDateFormat;
 import java.util.Date;
 
 @Entity(tableName = "task")
@@ -12,12 +14,14 @@ public class Task {
     private String title;
     private String description;
     private int priority;
-    private String date;
+    private int progress;
+    private Long date;
 
-    public Task(String title, String description, int priority, String date) {
+    public Task(String title, String description, int priority, int progress, Long date) {
         this.title = title;
         this.description = description;
         this.priority = priority;
+        this.progress = progress;
         this.date = date;
     }
 
@@ -53,11 +57,19 @@ public class Task {
         this.priority = priority;
     }
 
-    public String getDate() {
+    public int getProgress() {
+        return progress;
+    }
+
+    public void setProgress(int progress) {
+        this.progress = progress;
+    }
+
+    public Long getDate() {
         return date;
     }
 
-    public void setDate(String date) {
+    public void setDate(Long date) {
         this.date = date;
     }
 }

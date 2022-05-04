@@ -12,14 +12,16 @@ import androidx.recyclerview.widget.RecyclerView;
 import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
-import android.view.View.OnLongClickListener;
-import android.widget.AdapterView;
 import android.widget.Toast;
 
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 
-import java.sql.Date;
+import java.util.Date;
 import java.util.List;
+
+import pl.edu.pja.taskmanager.adapter.TaskAdapter;
+import pl.edu.pja.taskmanager.model.Task;
+import pl.edu.pja.taskmanager.model.TaskViewModel;
 
 public class MainActivity extends AppCompatActivity {
 
@@ -33,6 +35,8 @@ public class MainActivity extends AppCompatActivity {
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
+        getSupportActionBar().setDisplayShowHomeEnabled(true);
+        getSupportActionBar().setIcon(R.drawable.ic_to_do);
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
@@ -88,10 +92,12 @@ public class MainActivity extends AppCompatActivity {
                     intent.putExtra(NewTaskActivity.EXTRA_TITLE, taskAdapter.getTask(viewHolder.getAdapterPosition()).getTitle());
                     intent.putExtra(NewTaskActivity.EXTRA_DESCRIPTION, taskAdapter.getTask(viewHolder.getAdapterPosition()).getDescription());
                     intent.putExtra(NewTaskActivity.EXTRA_PRIORITY, taskAdapter.getTask(viewHolder.getAdapterPosition()).getPriority());
-                    intent.putExtra(NewTaskActivity.EXTRA_DATE, taskAdapter.getTask(viewHolder.getAdapterPosition()).getDate());
+                    intent.putExtra(NewTaskActivity.EXTRA_PROGRESS, taskAdapter.getTask(viewHolder.getAdapterPosition()).getProgress());
+                    intent.putExtra(NewTaskActivity.EXTRA_YEAR, taskAdapter.getTask(viewHolder.getAdapterPosition()).getDate());
+                    intent.putExtra(NewTaskActivity.EXTRA_MONTH, taskAdapter.getTask(viewHolder.getAdapterPosition()).getDate());
+                    intent.putExtra(NewTaskActivity.EXTRA_DAY, taskAdapter.getTask(viewHolder.getAdapterPosition()).getDate());
 
                     startActivityForResult(intent, EDIT_TASK_REQUEST_CODE);
-
                 }
             }
         }).attachToRecyclerView(recyclerView);
@@ -105,9 +111,14 @@ public class MainActivity extends AppCompatActivity {
             String title = data.getStringExtra(NewTaskActivity.EXTRA_TITLE);
             String description = data.getStringExtra(NewTaskActivity.EXTRA_DESCRIPTION);
             int priority = data.getIntExtra(NewTaskActivity.EXTRA_PRIORITY, 1);
-            String date = data.getStringExtra(NewTaskActivity.EXTRA_DATE);
+            int year = data.getIntExtra(NewTaskActivity.EXTRA_YEAR,2000);
+            int month = data.getIntExtra(NewTaskActivity.EXTRA_MONTH,1);
+            int day = data.getIntExtra(NewTaskActivity.EXTRA_DAY,25);
+//            String date = data.getStringExtra(NewTaskActivity.EXTRA_DATE);
+            Date date = new Date(year, month, day);
+            int progress = data.getIntExtra(NewTaskActivity.EXTRA_PROGRESS, 0);
 
-            Task task = new Task(title, description, priority, date);
+            Task task = new Task(title, description, priority, progress, date.getTime());
             taskViewModel.insert(task);
 
             Toast.makeText(this, "Task saved", Toast.LENGTH_SHORT).show();
@@ -120,9 +131,13 @@ public class MainActivity extends AppCompatActivity {
             String title = data.getStringExtra(NewTaskActivity.EXTRA_TITLE);
             String description = data.getStringExtra(NewTaskActivity.EXTRA_DESCRIPTION);
             int priority = data.getIntExtra(NewTaskActivity.EXTRA_PRIORITY, 1);
-            String date = data.getStringExtra(NewTaskActivity.EXTRA_DATE);
-
-            Task task = new Task(title, description, priority, date);
+            int year = data.getIntExtra(NewTaskActivity.EXTRA_YEAR,2000);
+            int month = data.getIntExtra(NewTaskActivity.EXTRA_MONTH,1);
+            int day = data.getIntExtra(NewTaskActivity.EXTRA_DAY,25);
+//            String date = data.getStringExtra(NewTaskActivity.EXTRA_DATE);
+            Date date = new Date(year, month, day);
+            int progress = data.getIntExtra(NewTaskActivity.EXTRA_PROGRESS, 0);
+            Task task = new Task(title, description, priority, progress,date.getTime());
             task.setId(id);
             taskViewModel.update(task);
             Toast.makeText(this, "Task updated!", Toast.LENGTH_SHORT).show();
