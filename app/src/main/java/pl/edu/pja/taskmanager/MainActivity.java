@@ -51,7 +51,7 @@ public class MainActivity extends AppCompatActivity {
         // TODO : 30/04/2022 change place of methods
         recyclerView.setHasFixedSize(true);
         recyclerView.setLayoutManager(new LinearLayoutManager(this));
-        taskAdapter = new TaskAdapter();
+        taskAdapter = new TaskAdapter(getApplication());
         recyclerView.setAdapter(taskAdapter);
 
         floatingActionButton.setOnClickListener(new View.OnClickListener() {
@@ -116,7 +116,8 @@ public class MainActivity extends AppCompatActivity {
             String description = data.getStringExtra(NewTaskActivity.EXTRA_DESCRIPTION);
             int priority = data.getIntExtra(NewTaskActivity.EXTRA_PRIORITY, 1);
             int year = data.getIntExtra(NewTaskActivity.EXTRA_YEAR,2000);
-            int month = data.getIntExtra(NewTaskActivity.EXTRA_MONTH,1);
+            int monthFromZero = data.getIntExtra(NewTaskActivity.EXTRA_MONTH,1);
+            int month = monthFromZero + 1;
             int day = data.getIntExtra(NewTaskActivity.EXTRA_DAY,25);
 //            String date = data.getStringExtra(NewTaskActivity.EXTRA_DATE);
 
