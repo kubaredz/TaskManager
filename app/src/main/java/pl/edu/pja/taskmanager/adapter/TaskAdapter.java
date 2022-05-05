@@ -14,11 +14,12 @@ import pl.edu.pja.taskmanager.model.Task;
 public class TaskAdapter extends ListAdapter<Task, TaskAdapter.TaskViewHolder> {
 
     private static final DiffUtil.ItemCallback<Task> TASK_DIFFERENCE;
-    private static final String TITLE = "Tytuł: ";
-    private static final String DESCRIPTION = "Opis: ";
-    private static final String PRIORITY = "Priorytet: ";
-    private static final String PROGRESS = "Progres: ";
-    private static final String DATE = "Data do: ";
+    private static final String TITLE = "Tytuł";
+    private static final String DESCRIPTION = "Opis";
+    private static final String PRIORITY = "Priorytet";
+    private static final String PROGRESS = "Progres";
+    private static final String DATE = "Data do";
+    private static final String COLON = ": ";
 
     public TaskAdapter() {
         super(TASK_DIFFERENCE);
@@ -29,7 +30,13 @@ public class TaskAdapter extends ListAdapter<Task, TaskAdapter.TaskViewHolder> {
     }
 
     public static class TaskViewHolder extends RecyclerView.ViewHolder{
-        TextView title, description, priority, date, progress;
+
+        TextView title;
+        TextView description;
+        TextView priority;
+        TextView progress;
+        TextView date;
+
         public TaskViewHolder(View itemView) {
             super(itemView);
 
@@ -44,14 +51,14 @@ public class TaskAdapter extends ListAdapter<Task, TaskAdapter.TaskViewHolder> {
     @Override
     public void onBindViewHolder(TaskViewHolder holder, int position) {
         Task task = getItem(position);
-        holder.title.setText(TITLE + task.getTitle());
-        holder.description.setText(DESCRIPTION + task.getDescription());
-        holder.priority.setText(PRIORITY + String.valueOf(task.getPriority()));
-        holder.progress.setText(PROGRESS + String.valueOf(task.getProgress()) + "%");
+        holder.title.setText(TITLE + COLON + task.getTitle());
+        holder.description.setText(DESCRIPTION + COLON +task.getDescription());
+        holder.priority.setText(PRIORITY + COLON + String.valueOf(task.getPriority()));
+        holder.progress.setText(PROGRESS + COLON + String.valueOf(task.getProgress()) + "%");
         Long date = task.getDate();
         Date date1 = new Date(date);
         //// TODO: 01/05/2022
-        holder.date.setText(DATE + date1.getDay() + "-" + date1.getMonth()  +"-2022");
+        holder.date.setText(DATE + COLON + date1.getDay() + "-" + date1.getMonth()  +"-2022");
     }
 
     static {

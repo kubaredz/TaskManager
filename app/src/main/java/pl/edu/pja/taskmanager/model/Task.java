@@ -2,10 +2,8 @@ package pl.edu.pja.taskmanager.model;
 
 import androidx.room.Entity;
 import androidx.room.PrimaryKey;
-import androidx.room.TypeConverter;
 
-import java.text.SimpleDateFormat;
-import java.util.Date;
+import java.util.Objects;
 
 @Entity(tableName = "task")
 public class Task {
@@ -71,5 +69,30 @@ public class Task {
 
     public void setDate(Long date) {
         this.date = date;
+    }
+
+    @Override
+    public String toString() {
+        return "Task{" +
+                "id=" + id +
+                ", title='" + title + '\'' +
+                ", description='" + description + '\'' +
+                ", priority=" + priority +
+                ", progress=" + progress +
+                ", date=" + date +
+                '}';
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        Task task = (Task) o;
+        return id == task.id && priority == task.priority && progress == task.progress && Objects.equals(title, task.title) && Objects.equals(description, task.description) && Objects.equals(date, task.date);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(id, title, description, priority, progress, date);
     }
 }

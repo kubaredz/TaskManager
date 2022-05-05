@@ -9,15 +9,11 @@ import androidx.lifecycle.ViewModelProvider;
 import androidx.recyclerview.widget.ItemTouchHelper;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
-
 import android.content.Intent;
 import android.os.Build;
 import android.os.Bundle;
 import android.view.View;
-import android.widget.Toast;
-
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
-
 import java.time.Instant;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
@@ -27,13 +23,12 @@ import java.util.Date;
 import java.util.GregorianCalendar;
 import java.util.List;
 import java.util.TimeZone;
-
 import pl.edu.pja.taskmanager.adapter.TaskAdapter;
 import pl.edu.pja.taskmanager.model.Task;
 import pl.edu.pja.taskmanager.model.TaskViewModel;
 
 public class MainActivity extends AppCompatActivity {
-
+//TODO
     private RecyclerView recyclerView;
     private FloatingActionButton floatingActionButton;
     private TaskAdapter taskAdapter;

@@ -1,7 +1,6 @@
 package pl.edu.pja.taskmanager.model;
 
 import android.app.Application;
-
 import androidx.lifecycle.AndroidViewModel;
 import androidx.lifecycle.LiveData;
 import java.util.List;

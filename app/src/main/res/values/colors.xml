@@ -18,4 +18,5 @@
     <color name="sunsetOrange">#FE5F55</color>
     <color name="green">#B4FF9F</color>
     <color name="graphite">#4B4E53</color>
+    <color name="transparent">#FFFFFF</color>
 </resources>

@@ -9,7 +9,7 @@
 
     <TextView
         android:id="@+id/titleLabel"
-        android:layout_width="match_parent"
+        android:layout_width="300dp"
         android:layout_height="wrap_content"
         android:text="Tytuł:"
         android:textColor="@color/black"
@@ -138,4 +138,16 @@
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
     />
+
+    <Button
+        android:id="@+id/shareButton"
+        android:layout_width="97dp"
+        android:layout_height="41dp"
+        android:background="@color/beige"
+        android:drawableBottom="@drawable/share"
+        android:ellipsize="middle"
+        android:textColorLink="@color/beige"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:showAsAction="ifRoom" />
 </androidx.constraintlayout.widget.ConstraintLayout>
