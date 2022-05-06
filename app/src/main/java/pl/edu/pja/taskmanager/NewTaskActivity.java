@@ -9,10 +9,11 @@ import android.widget.Button;
 import android.widget.DatePicker;
 import android.widget.EditText;
 import android.widget.NumberPicker;
+
 import androidx.appcompat.app.AppCompatActivity;
 
 public class NewTaskActivity extends AppCompatActivity {
-//TODO
+    //TODO
     public static final String EXTRA_TITLE = "pl.edu.pja.taskmanager.EXTRA_TITLE";
     public static final String EXTRA_DESCRIPTION = "pl.edu.pja.taskmanager.EXTRA_DESCRIPTION";
     public static final String EXTRA_PRIORITY = "pl.edu.pja.taskmanager.EXTRA_PRIORITY";
@@ -69,8 +70,8 @@ public class NewTaskActivity extends AppCompatActivity {
                 int progress = Integer.parseInt(progressField.getText().toString());
 
                 int year = dateField.getYear();
-                int month = dateField.getMonth()+1;
-                int day = dateField.getDayOfMonth()+1;
+                int month = dateField.getMonth() + 1;
+                int day = dateField.getDayOfMonth() + 1;
 
                 dataIntent.putExtra(EXTRA_TITLE, title);
                 dataIntent.putExtra(EXTRA_DESCRIPTION, description);

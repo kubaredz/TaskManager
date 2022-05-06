@@ -15,7 +15,6 @@ public class TaskRepository {
     private TaskDAO taskDAO;
     private LiveData<List<Task>> taskList;
 
-    //TODO
     public TaskRepository(Application core) {
         TaskDatabase taskDatabase = TaskDatabase.buildApplication(core);
         taskDAO = taskDatabase.taskDAO();
@@ -28,23 +27,23 @@ public class TaskRepository {
     }
 
     public void insertTask(Task task) {
-        new InsertAsyncTask(taskDAO).execute(task);
+        new InsertTask(taskDAO).execute(task);
     }
 
     public void updateTask(Task task) {
-        new UpdateAsyncTask(taskDAO).execute(task);
+        new UpdateTask(taskDAO).execute(task);
     }
 
     public void deleteTask(Task task) {
-        new DeleteAsyncTask(taskDAO).execute(task);
+        new DeleteTask(taskDAO).execute(task);
     }
 
 
-    private static class InsertAsyncTask extends AsyncTask<Task, Void, Void> {
+    private static class InsertTask extends AsyncTask<Task, Void, Void> {
 
         private TaskDAO taskDAO;
 
-        public InsertAsyncTask(TaskDAO taskDAO) {
+        public InsertTask(TaskDAO taskDAO) {
             this.taskDAO = taskDAO;
         }
 
@@ -55,32 +54,32 @@ public class TaskRepository {
         }
     }
 
-    private static class DeleteAsyncTask extends AsyncTask<Task, Void, Void> {
+    private static class UpdateTask extends AsyncTask<Task, Void, Void> {
 
         private TaskDAO taskDAO;
 
-        public DeleteAsyncTask(TaskDAO taskDAO) {
-            this.taskDAO = taskDAO;
-        }
-
-        @Override
-        protected Void doInBackground(Task... tasks) {
-            taskDAO.delete(tasks[0]);
-            return null;
-        }
-    }
-
-    private static class UpdateAsyncTask extends AsyncTask<Task, Void, Void> {
-
-        private TaskDAO taskDAO;
-
-        public UpdateAsyncTask(TaskDAO taskDAO) {
+        public UpdateTask(TaskDAO taskDAO) {
             this.taskDAO = taskDAO;
         }
 
         @Override
         protected Void doInBackground(Task... tasks) {
             taskDAO.update(tasks[0]);
+            return null;
+        }
+    }
+
+    private static class DeleteTask extends AsyncTask<Task, Void, Void> {
+
+        private TaskDAO taskDAO;
+
+        public DeleteTask(TaskDAO taskDAO) {
+            this.taskDAO = taskDAO;
+        }
+
+        @Override
+        protected Void doInBackground(Task... tasks) {
+            taskDAO.delete(tasks[0]);
             return null;
         }
     }
