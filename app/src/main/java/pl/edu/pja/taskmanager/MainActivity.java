@@ -19,7 +19,6 @@ import android.os.Build;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
-import android.widget.AdapterView;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -31,7 +30,6 @@ import java.time.LocalDateTime;
 import java.time.LocalTime;
 import java.time.ZoneId;
 import java.util.Date;
-import java.util.GregorianCalendar;
 import java.util.List;
 import java.util.TimeZone;
 
@@ -56,13 +54,14 @@ public class MainActivity extends AppCompatActivity {
         getSupportActionBar().setDisplayShowHomeEnabled(true);
         getSupportActionBar().setIcon(R.drawable.ic_to_do);
         super.onCreate(savedInstanceState);
+
+        //PODPIECIE GLOWNY EKRAN
         setContentView(R.layout.activity_main);
 
-        // TODO: 30/04/2022 refactor button name
+        //PODPIECIE POL GLOWNY EKRAN
         recyclerView = findViewById(R.id.itemList);
         floatingActionButton = findViewById(R.id.addNewTaskButton);
         textView = findViewById(R.id.textView);
-        // TODO : 30/04/2022 change place of methods
         recyclerView.setHasFixedSize(true);
         recyclerView.setLayoutManager(new LinearLayoutManager(this));
         taskAdapter = new TaskAdapter(getApplication());
@@ -72,7 +71,7 @@ public class MainActivity extends AppCompatActivity {
                 new IntentFilter("custom-message"));
 
 
-
+        //ADD PRZYCISK GLOWNY EKRAN
         floatingActionButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -89,19 +88,11 @@ public class MainActivity extends AppCompatActivity {
             }
         });
 
-//        recyclerView.setOnLongClickListener(new AdapterView.OnItemClickListener() {
-//            @Override
-//            public void onItemClick(AdapterView<?> parent, View view,
-//                                    int position, long id) {
-//                taskViewModel.delete(taskAdapter.getTask(view.getVerticalScrollbarPosition()));
-//                taskAdapter.notifyDataSetChanged();
-//
-//            }
-//        });
 // TODO na klikniecie w pozycje pobieram ID + metoda do kasowania z odpowiednim ID
 //        recyclerView
 
         // TODO: 30/04/2022 15:37
+        //USUNIECIE NA LONG CLICK
         recyclerView.setOnLongClickListener(new View.OnLongClickListener() {
             @Override
             public boolean onLongClick(View view) {
@@ -120,6 +111,7 @@ public class MainActivity extends AppCompatActivity {
 //        sendIntent.setType("vnd.android-dir/mms-sms");
 //        startActivity(sendIntent);
 
+        //USUNIECIE / EDYCJA SWIPE DELETE
         new ItemTouchHelper(new ItemTouchHelper.SimpleCallback(0, ItemTouchHelper.LEFT | ItemTouchHelper.RIGHT) {
             @Override
             public boolean onMove(@NonNull RecyclerView recyclerView, @NonNull RecyclerView.ViewHolder viewHolder, @NonNull RecyclerView.ViewHolder target) {
@@ -128,12 +120,15 @@ public class MainActivity extends AppCompatActivity {
 
             @Override
             public void onSwiped(@NonNull RecyclerView.ViewHolder viewHolder, int direction) {
+                //USUNIECIE NA SWIPE
                 if (direction == ItemTouchHelper.RIGHT) {
                     taskViewModel.delete(taskAdapter.getTask(viewHolder.getAdapterPosition()));
                     // TO DO Odswiezyc glowny ekran
 //                    finish();
 //                    startActivity(getIntent());
                 } else {
+                    //EDYCJA NA SWIPE
+                    //PODPIECIE WIDOK EDYCJI
                     Intent intent = new Intent(MainActivity.this, NewTaskActivity.class);
                     intent.putExtra(NewTaskActivity.EXTRA_ID, taskAdapter.getTask(viewHolder.getAdapterPosition()).getId());
                     intent.putExtra(NewTaskActivity.EXTRA_TITLE, taskAdapter.getTask(viewHolder.getAdapterPosition()).getTitle());
@@ -152,8 +147,6 @@ public class MainActivity extends AppCompatActivity {
 
     @Override
     protected void onResume() {
-
-
         super.onResume();
         Log.d("main", "is IN RESUME");
         try {
@@ -173,7 +166,7 @@ public class MainActivity extends AppCompatActivity {
     @Override
     protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
-
+        //DODAJ NOWY TASK -> PRZEKAZANIE PO WCISNIECIU PRZYCISKU
         if (requestCode == ADD_TASK_REQUEST_CODE && resultCode == RESULT_OK) {
             String title = data.getStringExtra(NewTaskActivity.EXTRA_TITLE);
             String description = data.getStringExtra(NewTaskActivity.EXTRA_DESCRIPTION);
@@ -190,9 +183,11 @@ public class MainActivity extends AppCompatActivity {
             int progress = data.getIntExtra(NewTaskActivity.EXTRA_PROGRESS, 0);
 
             Task task = new Task(title, description, priority, progress, date1.getTime());
+            //UTWORZENIE NOWEGO TASKA
             taskViewModel.insert(task);
 
         } else if (requestCode == EDIT_TASK_REQUEST_CODE && resultCode == RESULT_OK) {
+            //EDYCJA ISTNIEJACEGO TASKA
             int id = data.getIntExtra(NewTaskActivity.EXTRA_ID, -1);
 
             String title = data.getStringExtra(NewTaskActivity.EXTRA_TITLE);
