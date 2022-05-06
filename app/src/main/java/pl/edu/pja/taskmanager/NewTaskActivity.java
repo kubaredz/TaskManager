@@ -60,6 +60,7 @@ public class NewTaskActivity extends AppCompatActivity {
         saveTask.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
+                /// TODO
                 String title = titleField.getText().toString();
                 String description = descriptionField.getText().toString();
                 int priority = priorityField.getValue();
@@ -68,8 +69,8 @@ public class NewTaskActivity extends AppCompatActivity {
                 int progress = Integer.parseInt(progressField.getText().toString());
 
                 int year = dateField.getYear();
-                int month = dateField.getMonth();
-                int day = dateField.getDayOfMonth();
+                int month = dateField.getMonth()+1;
+                int day = dateField.getDayOfMonth()+1;
 
                 dataIntent.putExtra(EXTRA_TITLE, title);
                 dataIntent.putExtra(EXTRA_DESCRIPTION, description);

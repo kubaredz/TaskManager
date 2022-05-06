@@ -6,14 +6,25 @@ import androidx.annotation.RequiresApi;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModelProvider;
+import androidx.localbroadcastmanager.content.LocalBroadcastManager;
 import androidx.recyclerview.widget.ItemTouchHelper;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
+
+import android.content.BroadcastReceiver;
+import android.content.Context;
 import android.content.Intent;
+import android.content.IntentFilter;
 import android.os.Build;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
+import android.widget.AdapterView;
+import android.widget.TextView;
+import android.widget.Toast;
+
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
+
 import java.time.Instant;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
@@ -23,14 +34,17 @@ import java.util.Date;
 import java.util.GregorianCalendar;
 import java.util.List;
 import java.util.TimeZone;
+
 import pl.edu.pja.taskmanager.adapter.TaskAdapter;
 import pl.edu.pja.taskmanager.model.Task;
 import pl.edu.pja.taskmanager.model.TaskViewModel;
 
 public class MainActivity extends AppCompatActivity {
-//TODO
+    //TODO
     private RecyclerView recyclerView;
     private FloatingActionButton floatingActionButton;
+    private TaskAdapter.Example example;
+    private TextView textView;
     private TaskAdapter taskAdapter;
     private TaskViewModel taskViewModel;
     private static final int ADD_TASK_REQUEST_CODE = 1;
@@ -47,12 +61,17 @@ public class MainActivity extends AppCompatActivity {
         // TODO: 30/04/2022 refactor button name
         recyclerView = findViewById(R.id.itemList);
         floatingActionButton = findViewById(R.id.addNewTaskButton);
-
+        textView = findViewById(R.id.textView);
         // TODO : 30/04/2022 change place of methods
         recyclerView.setHasFixedSize(true);
         recyclerView.setLayoutManager(new LinearLayoutManager(this));
         taskAdapter = new TaskAdapter(getApplication());
         recyclerView.setAdapter(taskAdapter);
+
+        LocalBroadcastManager.getInstance(this).registerReceiver(mMessageReceiver,
+                new IntentFilter("custom-message"));
+
+
 
         floatingActionButton.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -69,15 +88,37 @@ public class MainActivity extends AppCompatActivity {
                 taskAdapter.submitList(tasks);
             }
         });
-        // TODO: 30/04/2022 15:37
-//        recyclerView..setOnLongClickListener(new View.OnLongClickListener() {
+
+//        recyclerView.setOnLongClickListener(new AdapterView.OnItemClickListener() {
 //            @Override
-//            public boolean onLongClick(View view) {
+//            public void onItemClick(AdapterView<?> parent, View view,
+//                                    int position, long id) {
 //                taskViewModel.delete(taskAdapter.getTask(view.getVerticalScrollbarPosition()));
-//                Toast.makeText(MainActivity.this, "Deleted", Toast.LENGTH_SHORT).show();
-//                return false;
+//                taskAdapter.notifyDataSetChanged();
+//
 //            }
 //        });
+// TODO na klikniecie w pozycje pobieram ID + metoda do kasowania z odpowiednim ID
+//        recyclerView
+
+        // TODO: 30/04/2022 15:37
+        recyclerView.setOnLongClickListener(new View.OnLongClickListener() {
+            @Override
+            public boolean onLongClick(View view) {
+                taskViewModel.delete(taskAdapter.getTask(view.getVerticalScrollbarPosition()));
+                Toast.makeText(MainActivity.this, "Deleted", Toast.LENGTH_SHORT).show();
+                return true;
+            }
+        });
+
+        //TODO
+
+        //onclick button {}
+//        String smsBody="Sms Body";
+//        Intent sendIntent = new Intent(Intent.ACTION_VIEW);
+//        sendIntent.putExtra("sms_body", smsBody);
+//        sendIntent.setType("vnd.android-dir/mms-sms");
+//        startActivity(sendIntent);
 
         new ItemTouchHelper(new ItemTouchHelper.SimpleCallback(0, ItemTouchHelper.LEFT | ItemTouchHelper.RIGHT) {
             @Override
@@ -87,9 +128,12 @@ public class MainActivity extends AppCompatActivity {
 
             @Override
             public void onSwiped(@NonNull RecyclerView.ViewHolder viewHolder, int direction) {
-                if (direction == ItemTouchHelper.RIGHT){
+                if (direction == ItemTouchHelper.RIGHT) {
                     taskViewModel.delete(taskAdapter.getTask(viewHolder.getAdapterPosition()));
-                }else {
+                    // TO DO Odswiezyc glowny ekran
+//                    finish();
+//                    startActivity(getIntent());
+                } else {
                     Intent intent = new Intent(MainActivity.this, NewTaskActivity.class);
                     intent.putExtra(NewTaskActivity.EXTRA_ID, taskAdapter.getTask(viewHolder.getAdapterPosition()).getId());
                     intent.putExtra(NewTaskActivity.EXTRA_TITLE, taskAdapter.getTask(viewHolder.getAdapterPosition()).getTitle());
@@ -106,19 +150,38 @@ public class MainActivity extends AppCompatActivity {
         }).attachToRecyclerView(recyclerView);
     }
 
+    @Override
+    protected void onResume() {
+
+
+        super.onResume();
+        Log.d("main", "is IN RESUME");
+        try {
+//            if (example.getId() >= 0) {
+
+                Log.d("main", "is IN");
+//                textView.setText(String.valueOf(example.getId()));
+//                finish();
+//                startActivity(getIntent());
+//            }
+        } catch (NullPointerException e) {
+            System.err.println("Null pointer exception");
+        }
+    }
+
     @RequiresApi(api = Build.VERSION_CODES.O)
     @Override
     protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
 
-        if(requestCode == ADD_TASK_REQUEST_CODE && resultCode == RESULT_OK) {
+        if (requestCode == ADD_TASK_REQUEST_CODE && resultCode == RESULT_OK) {
             String title = data.getStringExtra(NewTaskActivity.EXTRA_TITLE);
             String description = data.getStringExtra(NewTaskActivity.EXTRA_DESCRIPTION);
             int priority = data.getIntExtra(NewTaskActivity.EXTRA_PRIORITY, 1);
-            int year = data.getIntExtra(NewTaskActivity.EXTRA_YEAR,2000);
-            int monthFromZero = data.getIntExtra(NewTaskActivity.EXTRA_MONTH,1);
-            int month = monthFromZero + 1;
-            int day = data.getIntExtra(NewTaskActivity.EXTRA_DAY,25);
+            int year = data.getIntExtra(NewTaskActivity.EXTRA_YEAR, 2000);
+            int monthFromZero = data.getIntExtra(NewTaskActivity.EXTRA_MONTH, 1);
+            int month = monthFromZero;
+            int day = data.getIntExtra(NewTaskActivity.EXTRA_DAY, 25);
 //            String date = data.getStringExtra(NewTaskActivity.EXTRA_DATE);
 
             LocalDate date = LocalDate.of(year, month, day);
@@ -129,24 +192,24 @@ public class MainActivity extends AppCompatActivity {
             Task task = new Task(title, description, priority, progress, date1.getTime());
             taskViewModel.insert(task);
 
-        }else if(requestCode == EDIT_TASK_REQUEST_CODE && resultCode == RESULT_OK){
+        } else if (requestCode == EDIT_TASK_REQUEST_CODE && resultCode == RESULT_OK) {
             int id = data.getIntExtra(NewTaskActivity.EXTRA_ID, -1);
 
             String title = data.getStringExtra(NewTaskActivity.EXTRA_TITLE);
             String description = data.getStringExtra(NewTaskActivity.EXTRA_DESCRIPTION);
             int priority = data.getIntExtra(NewTaskActivity.EXTRA_PRIORITY, 1);
-            int year = data.getIntExtra(NewTaskActivity.EXTRA_YEAR,2000);
-            int month = data.getIntExtra(NewTaskActivity.EXTRA_MONTH,1);
-            int day = data.getIntExtra(NewTaskActivity.EXTRA_DAY,25);
-            int progress = data.getIntExtra(NewTaskActivity.EXTRA_PROGRESS, 1);
+            int year = data.getIntExtra(NewTaskActivity.EXTRA_YEAR, 2000);
+            int month = data.getIntExtra(NewTaskActivity.EXTRA_MONTH, 1);
+            int day = data.getIntExtra(NewTaskActivity.EXTRA_DAY, 25);
 
 //            String date = data.getStringExtra(NewTaskActivity.EXTRA_DATE);
-            Date date = new Date(year, month, day);
 
-            GregorianCalendar calendar = new GregorianCalendar();
-            calendar.setGregorianChange(date);
-            Date dateToConvert = calendar.getTime();
-            Task task = new Task(title, description, priority, progress,dateToConvert.getTime());
+            LocalDate date = LocalDate.of(year, month, day);
+            ZoneId defaultZoneId = ZoneId.systemDefault();
+            Date date1 = Date.from(date.atStartOfDay(defaultZoneId).toInstant());
+            int progress = data.getIntExtra(NewTaskActivity.EXTRA_PROGRESS, 0);
+
+            Task task = new Task(title, description, priority, progress, date1.getTime());
             task.setId(id);
             taskViewModel.update(task);
         }
@@ -161,9 +224,19 @@ public class MainActivity extends AppCompatActivity {
     }
 
     @RequiresApi(api = Build.VERSION_CODES.O)
-    public Long changeTypeOfData(LocalDateTime time){
+    public Long changeTypeOfData(LocalDateTime time) {
         ZoneId zoneId = ZoneId.systemDefault();
-        time = time.with(LocalTime.of(0,0));
+        time = time.with(LocalTime.of(0, 0));
         return time.atZone(zoneId).toInstant().toEpochMilli();
     }
+    public BroadcastReceiver mMessageReceiver = new BroadcastReceiver() {
+        @Override
+        public void onReceive(Context context, Intent intent) {
+            // Get extra data included in the Intent
+            String countFromReceiver = intent.getStringExtra("count");
+            textView.setText(countFromReceiver);
+        }
+    };
 }
+
+
