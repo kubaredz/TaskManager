@@ -1,9 +1,12 @@
 package pl.edu.pja.taskmanager.model;
 
 import android.app.Application;
+
 import androidx.lifecycle.AndroidViewModel;
 import androidx.lifecycle.LiveData;
+
 import java.util.List;
+
 import pl.edu.pja.taskmanager.repository.TaskRepository;
 
 public class TaskViewModel extends AndroidViewModel {
@@ -19,23 +22,23 @@ public class TaskViewModel extends AndroidViewModel {
         taskList = taskRepository.getAllTasks();
     }
 
-    public LiveData<List<Task>> getCountList(){
+    public LiveData<List<Task>> getCountList() {
         return taskList;
     }
 
-    public LiveData<List<Task>> getAllTasks(){
+    public LiveData<List<Task>> getAllTasks() {
         return taskList;
     }
 
-    public void insert(Task task){
+    public void insert(Task task) {
         taskRepository.insertTask(task);
     }
 
-    public void delete(Task task){
+    public void delete(Task task) {
         taskRepository.deleteTask(task);
     }
 
-    public void update(Task task){
+    public void update(Task task) {
         taskRepository.updateTask(task);
     }
 }

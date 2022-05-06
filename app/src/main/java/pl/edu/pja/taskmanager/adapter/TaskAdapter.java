@@ -129,8 +129,8 @@ public class TaskAdapter extends ListAdapter<Task, TaskAdapter.TaskViewHolder> {
 //        if(instant.toEpochMilli() > currentTime && lastValue > 0) {
 //        }
 
-        if (instant.toEpochMilli()>currentTime)
-        {
+//        if (instant.toEpochMilli()>currentTime)
+//        {
 
             holder.title.setText(TITLE + COLON + task.getTitle());
             holder.description.setText(DESCRIPTION + COLON + task.getDescription());
@@ -158,12 +158,12 @@ public class TaskAdapter extends ListAdapter<Task, TaskAdapter.TaskViewHolder> {
             Date date1 = new Date(date);
             //// TODO: 01/05/2022
 //        holder.date.setText(DATE + COLON + date1.getDay() + "-" + date1.getMonth()  +"-2022");
-            holder.date.setText(DATE + COLON + formatted);
-        } else {
-            Log.d("adapter", "nothing to display data too much");
-
-            taskRepository.deleteTask(task);
-        }
+            holder.date.setText(formatted);
+//        } else {
+//            Log.d("adapter", "nothing to display data too much");
+//
+//            taskRepository.deleteTask(task);
+//        }
     }
 
     static {
