@@ -38,7 +38,7 @@ import pl.edu.pja.taskmanager.model.Task;
 import pl.edu.pja.taskmanager.model.TaskViewModel;
 
 public class MainActivity extends AppCompatActivity {
-    //TODO
+
     private RecyclerView recyclerView;
     private FloatingActionButton floatingActionButton;
     private TaskAdapter.Example example;
@@ -55,10 +55,10 @@ public class MainActivity extends AppCompatActivity {
         getSupportActionBar().setIcon(R.drawable.ic_to_do);
         super.onCreate(savedInstanceState);
 
-        //PODPIECIE GLOWNY EKRAN
+        //PODPIECIE WIDOKU - GLOWNY EKRAN
         setContentView(R.layout.activity_main);
 
-        //PODPIECIE POL GLOWNY EKRAN
+        //PODPIECIE POL - GLOWNY EKRAN
         recyclerView = findViewById(R.id.itemList);
         floatingActionButton = findViewById(R.id.addNewTaskButton);
         textView = findViewById(R.id.textView);
@@ -71,45 +71,30 @@ public class MainActivity extends AppCompatActivity {
                 new IntentFilter("custom-message"));
 
 
-        //ADD PRZYCISK GLOWNY EKRAN
-        floatingActionButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                Intent intent = new Intent(MainActivity.this, NewTaskActivity.class);
-                startActivityForResult(intent, ADD_TASK_REQUEST_CODE);
-            }
+        //ADD PRZYCISK - GLOWNY EKRAN
+        floatingActionButton.setOnClickListener(view -> {
+            Intent intent = new Intent(MainActivity.this, NewTaskActivity.class);
+            startActivityForResult(intent, ADD_TASK_REQUEST_CODE);
         });
-        taskViewModel = new ViewModelProvider(this, (ViewModelProvider.Factory) ViewModelProvider.AndroidViewModelFactory.getInstance(this.getApplication()))
+        taskViewModel = new ViewModelProvider(this, (ViewModelProvider.Factory)
+                ViewModelProvider.AndroidViewModelFactory.getInstance(this.getApplication()))
                 .get(TaskViewModel.class);
-        taskViewModel.getAllTasks().observe(this, new Observer<List<Task>>() {
-            @Override
-            public void onChanged(List<Task> tasks) {
-                taskAdapter.submitList(tasks);
-            }
-        });
+        taskViewModel.getAllTasks().observe(this, tasks -> taskAdapter.submitList(tasks));
 
-// TODO na klikniecie w pozycje pobieram ID + metoda do kasowania z odpowiednim ID
-//        recyclerView
-
-        // TODO: 30/04/2022 15:37
         //USUNIECIE NA LONG CLICK
-        recyclerView.setOnLongClickListener(new View.OnLongClickListener() {
-            @Override
-            public boolean onLongClick(View view) {
-                taskViewModel.delete(taskAdapter.getTask(view.getVerticalScrollbarPosition()));
-                Toast.makeText(MainActivity.this, "Deleted", Toast.LENGTH_SHORT).show();
-                return true;
-            }
+        recyclerView.setOnLongClickListener(view -> {
+            taskViewModel.delete(taskAdapter.getTask(view.getVerticalScrollbarPosition()));
+            Toast.makeText(MainActivity.this, "Deleted", Toast.LENGTH_SHORT).show();
+            return true;
         });
 
         //TODO
-
         //onclick button {}
-//        String smsBody="Sms Body";
-//        Intent sendIntent = new Intent(Intent.ACTION_VIEW);
-//        sendIntent.putExtra("sms_body", smsBody);
-//        sendIntent.setType("vnd.android-dir/mms-sms");
-//        startActivity(sendIntent);
+        //        String smsBody="Sms Body";
+        //        Intent sendIntent = new Intent(Intent.ACTION_VIEW);
+        //        sendIntent.putExtra("sms_body", smsBody);
+        //        sendIntent.setType("vnd.android-dir/mms-sms");
+        //        startActivity(sendIntent);
 
         //USUNIECIE / EDYCJA SWIPE DELETE
         new ItemTouchHelper(new ItemTouchHelper.SimpleCallback(0, ItemTouchHelper.LEFT | ItemTouchHelper.RIGHT) {
@@ -123,21 +108,21 @@ public class MainActivity extends AppCompatActivity {
                 //USUNIECIE NA SWIPE
                 if (direction == ItemTouchHelper.RIGHT) {
                     taskViewModel.delete(taskAdapter.getTask(viewHolder.getAdapterPosition()));
-                    // TO DO Odswiezyc glowny ekran
-//                    finish();
-//                    startActivity(getIntent());
+                    //TODO Odswiezyc glowny ekran
+                    finish();
+                    startActivity(getIntent());
                 } else {
                     //EDYCJA NA SWIPE
-                    //PODPIECIE WIDOK EDYCJI
+                    //PRZEJSCIE NA WIDOK - EDYCJA TASKA
                     Intent intent = new Intent(MainActivity.this, NewTaskActivity.class);
-                    intent.putExtra(NewTaskActivity.EXTRA_ID, taskAdapter.getTask(viewHolder.getAdapterPosition()).getId());
-                    intent.putExtra(NewTaskActivity.EXTRA_TITLE, taskAdapter.getTask(viewHolder.getAdapterPosition()).getTitle());
-                    intent.putExtra(NewTaskActivity.EXTRA_DESCRIPTION, taskAdapter.getTask(viewHolder.getAdapterPosition()).getDescription());
-                    intent.putExtra(NewTaskActivity.EXTRA_PRIORITY, taskAdapter.getTask(viewHolder.getAdapterPosition()).getPriority());
-                    intent.putExtra(NewTaskActivity.EXTRA_PROGRESS, taskAdapter.getTask(viewHolder.getAdapterPosition()).getProgress());
-                    intent.putExtra(NewTaskActivity.EXTRA_YEAR, taskAdapter.getTask(viewHolder.getAdapterPosition()).getDate());
-                    intent.putExtra(NewTaskActivity.EXTRA_MONTH, taskAdapter.getTask(viewHolder.getAdapterPosition()).getDate());
-                    intent.putExtra(NewTaskActivity.EXTRA_DAY, taskAdapter.getTask(viewHolder.getAdapterPosition()).getDate());
+                    intent.putExtra(NewTaskActivity.ID, taskAdapter.getTask(viewHolder.getAdapterPosition()).getId());
+                    intent.putExtra(NewTaskActivity.TITLE, taskAdapter.getTask(viewHolder.getAdapterPosition()).getTitle());
+                    intent.putExtra(NewTaskActivity.DESCRIPTION, taskAdapter.getTask(viewHolder.getAdapterPosition()).getDescription());
+                    intent.putExtra(NewTaskActivity.PRIORITY, taskAdapter.getTask(viewHolder.getAdapterPosition()).getPriority());
+                    intent.putExtra(NewTaskActivity.PROGRESS, taskAdapter.getTask(viewHolder.getAdapterPosition()).getProgress());
+                    intent.putExtra(NewTaskActivity.YEAR, taskAdapter.getTask(viewHolder.getAdapterPosition()).getDate());
+                    intent.putExtra(NewTaskActivity.MONTH, taskAdapter.getTask(viewHolder.getAdapterPosition()).getDate());
+                    intent.putExtra(NewTaskActivity.DAY, taskAdapter.getTask(viewHolder.getAdapterPosition()).getDate());
 
                     startActivityForResult(intent, EDIT_TASK_REQUEST_CODE);
                 }
@@ -150,13 +135,8 @@ public class MainActivity extends AppCompatActivity {
         super.onResume();
         Log.d("main", "is IN RESUME");
         try {
-//            if (example.getId() >= 0) {
+            Log.d("main", "is IN");
 
-                Log.d("main", "is IN");
-//                textView.setText(String.valueOf(example.getId()));
-//                finish();
-//                startActivity(getIntent());
-//            }
         } catch (NullPointerException e) {
             System.err.println("Null pointer exception");
         }
@@ -168,19 +148,19 @@ public class MainActivity extends AppCompatActivity {
         super.onActivityResult(requestCode, resultCode, data);
         //DODAJ NOWY TASK -> PRZEKAZANIE PO WCISNIECIU PRZYCISKU
         if (requestCode == ADD_TASK_REQUEST_CODE && resultCode == RESULT_OK) {
-            String title = data.getStringExtra(NewTaskActivity.EXTRA_TITLE);
-            String description = data.getStringExtra(NewTaskActivity.EXTRA_DESCRIPTION);
-            int priority = data.getIntExtra(NewTaskActivity.EXTRA_PRIORITY, 1);
-            int year = data.getIntExtra(NewTaskActivity.EXTRA_YEAR, 2000);
-            int monthFromZero = data.getIntExtra(NewTaskActivity.EXTRA_MONTH, 1);
+
+            String title = data.getStringExtra(NewTaskActivity.TITLE);
+            String description = data.getStringExtra(NewTaskActivity.DESCRIPTION);
+            int priority = data.getIntExtra(NewTaskActivity.PRIORITY, 1);
+            int year = data.getIntExtra(NewTaskActivity.YEAR, 2000);
+            int monthFromZero = data.getIntExtra(NewTaskActivity.MONTH, 1);
             int month = monthFromZero;
-            int day = data.getIntExtra(NewTaskActivity.EXTRA_DAY, 25);
-//            String date = data.getStringExtra(NewTaskActivity.EXTRA_DATE);
+            int day = data.getIntExtra(NewTaskActivity.DAY, 25);
 
             LocalDate date = LocalDate.of(year, month, day);
             ZoneId defaultZoneId = ZoneId.systemDefault();
             Date date1 = Date.from(date.atStartOfDay(defaultZoneId).toInstant());
-            int progress = data.getIntExtra(NewTaskActivity.EXTRA_PROGRESS, 0);
+            int progress = data.getIntExtra(NewTaskActivity.PROGRESS, 0);
 
             Task task = new Task(title, description, priority, progress, date1.getTime());
             //UTWORZENIE NOWEGO TASKA
@@ -188,21 +168,19 @@ public class MainActivity extends AppCompatActivity {
 
         } else if (requestCode == EDIT_TASK_REQUEST_CODE && resultCode == RESULT_OK) {
             //EDYCJA ISTNIEJACEGO TASKA
-            int id = data.getIntExtra(NewTaskActivity.EXTRA_ID, -1);
+            int id = data.getIntExtra(NewTaskActivity.ID, -1);
 
-            String title = data.getStringExtra(NewTaskActivity.EXTRA_TITLE);
-            String description = data.getStringExtra(NewTaskActivity.EXTRA_DESCRIPTION);
-            int priority = data.getIntExtra(NewTaskActivity.EXTRA_PRIORITY, 1);
-            int year = data.getIntExtra(NewTaskActivity.EXTRA_YEAR, 2000);
-            int month = data.getIntExtra(NewTaskActivity.EXTRA_MONTH, 1);
-            int day = data.getIntExtra(NewTaskActivity.EXTRA_DAY, 25);
-
-//            String date = data.getStringExtra(NewTaskActivity.EXTRA_DATE);
+            String title = data.getStringExtra(NewTaskActivity.TITLE);
+            String description = data.getStringExtra(NewTaskActivity.DESCRIPTION);
+            int priority = data.getIntExtra(NewTaskActivity.PRIORITY, 1);
+            int year = data.getIntExtra(NewTaskActivity.YEAR, 2000);
+            int month = data.getIntExtra(NewTaskActivity.MONTH, 1);
+            int day = data.getIntExtra(NewTaskActivity.DAY, 25);
 
             LocalDate date = LocalDate.of(year, month, day);
             ZoneId defaultZoneId = ZoneId.systemDefault();
             Date date1 = Date.from(date.atStartOfDay(defaultZoneId).toInstant());
-            int progress = data.getIntExtra(NewTaskActivity.EXTRA_PROGRESS, 0);
+            int progress = data.getIntExtra(NewTaskActivity.PROGRESS, 0);
 
             Task task = new Task(title, description, priority, progress, date1.getTime());
             task.setId(id);
@@ -224,10 +202,11 @@ public class MainActivity extends AppCompatActivity {
         time = time.with(LocalTime.of(0, 0));
         return time.atZone(zoneId).toInstant().toEpochMilli();
     }
+
+    //Counter
     public BroadcastReceiver mMessageReceiver = new BroadcastReceiver() {
         @Override
         public void onReceive(Context context, Intent intent) {
-            // Get extra data included in the Intent
             String countFromReceiver = intent.getStringExtra("count");
             textView.setText(countFromReceiver);
         }

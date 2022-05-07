@@ -1,7 +1,8 @@
 package pl.edu.pja.taskmanager.adapter;
 
+import static androidx.recyclerview.widget.RecyclerView.*;
+
 import android.app.Application;
-import android.content.Context;
 import android.content.Intent;
 import android.os.Build;
 import android.util.Log;
@@ -10,27 +11,22 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ProgressBar;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import androidx.annotation.RequiresApi;
 import androidx.localbroadcastmanager.content.LocalBroadcastManager;
 import androidx.recyclerview.widget.DiffUtil;
+import androidx.recyclerview.widget.DiffUtil.ItemCallback;
 import androidx.recyclerview.widget.ListAdapter;
 import androidx.recyclerview.widget.RecyclerView;
-
-import org.w3c.dom.Text;
 
 import java.time.Instant;
 import java.time.ZoneId;
 import java.time.ZonedDateTime;
 import java.time.format.DateTimeFormatter;
-import java.util.Calendar;
 import java.util.Date;
 
-import pl.edu.pja.taskmanager.MainActivity;
 import pl.edu.pja.taskmanager.R;
 import pl.edu.pja.taskmanager.model.Task;
-import pl.edu.pja.taskmanager.model.TaskViewModel;
 import pl.edu.pja.taskmanager.repository.TaskRepository;
 
 public class TaskAdapter extends ListAdapter<Task, TaskAdapter.TaskViewHolder> {
@@ -38,12 +34,11 @@ public class TaskAdapter extends ListAdapter<Task, TaskAdapter.TaskViewHolder> {
 
     private TaskRepository taskRepository;
     private Example example;
-    private static final DiffUtil.ItemCallback<Task> TASK_DIFFERENCE;
-    private static final String TITLE = "Tytuł";
-    private static final String DESCRIPTION = "Opis";
-    private static final String PRIORITY = "Priorytet";
-    private static final String PROGRESS = "Progres";
-    private static final String DATE = "Data do";
+    private static final ItemCallback<Task> TASK_DIFFERENCE;
+    private static final String TITLE_1 = "Tytuł";
+    private static final String DESCRIPTION_1 = "Opis";
+    private static final String PRIORITY_1 = "Priorytet";
+    private static final String PROGRESS_1 = "Progres";
     private static final String COLON = ": ";
     private int count;
 
@@ -56,11 +51,11 @@ public class TaskAdapter extends ListAdapter<Task, TaskAdapter.TaskViewHolder> {
 
     }
 
-    public Task getTask(int position){
+    public Task getTask(int position) {
         return getItem(position);
     }
 
-    public static class TaskViewHolder extends RecyclerView.ViewHolder{
+    public static class TaskViewHolder extends ViewHolder {
 
         TextView title;
         TextView description;
@@ -72,7 +67,7 @@ public class TaskAdapter extends ListAdapter<Task, TaskAdapter.TaskViewHolder> {
 
         public TaskViewHolder(View itemView) {
             super(itemView);
-
+            //podpiecie view na adapterze
             title = itemView.findViewById(R.id.title);
             description = itemView.findViewById(R.id.description);
             priority = itemView.findViewById(R.id.priority);
@@ -83,81 +78,55 @@ public class TaskAdapter extends ListAdapter<Task, TaskAdapter.TaskViewHolder> {
         }
     }
 
-    // policzyc ilosc elementow na liscie tylko tych ktore koncza sie do 7 dni (EPOCH)
-
-
     @RequiresApi(api = Build.VERSION_CODES.O)
     @Override
     public void onBindViewHolder(TaskViewHolder holder, int position) {
         Task task = getItem(position);
-//        Date currentTime = Calendar.getInstance().getTime();
 
-//        holder.itemView.setOnLongClickListener(new View.OnLongClickListener() {});
 
         // usuwanie
-        holder.itemView.getRootView().setOnLongClickListener(new View.OnLongClickListener() {
-            @Override
-            public boolean onLongClick(View view) {
-                taskRepository.deleteTask(task);
-                return true;
-            }
+        holder.itemView.getRootView().setOnLongClickListener(view -> {
+            taskRepository.deleteTask(task);
+            return true;
         });
-
+        //counter
         long currentTime = Instant.now().toEpochMilli();
-        // create Instant from millis value
         Long date = task.getDate();
         Instant instant = Instant.ofEpochMilli(date);
 
-        long epochSevenDays = 7*86400000;
+        long epochSevenDays = 7 * 86400000;
 
-        long valueBetween = instant.toEpochMilli()-currentTime;
+        long valueBetween = instant.toEpochMilli() - currentTime;
 
-        // TODO
         long currentWithSeven = currentTime + epochSevenDays;
 
         Log.d("values", currentWithSeven + "  ,  " + instant.toEpochMilli() + "  ,  " + currentTime);
 
 
-        if(currentWithSeven > instant.toEpochMilli() && currentTime < instant.toEpochMilli())
-        {
+        if (currentWithSeven > instant.toEpochMilli() && currentTime < instant.toEpochMilli()) {
             count++;
             Log.d("adapter", String.valueOf(count));
 
-//            String ItemName = tv.getText().toString();
-//            String qty = quantity.getText().toString();
         }
-//        if(instant.toEpochMilli() > currentTime && lastValue > 0) {
-//        }
+        // ONLY NEWEST THAN TODAY
+        if (instant.toEpochMilli() > currentTime) {
 
-        if (instant.toEpochMilli()>currentTime)
-        {
-
-            holder.title.setText(TITLE + COLON + task.getTitle());
-            holder.description.setText(DESCRIPTION + COLON + task.getDescription());
-            holder.priority.setText(PRIORITY + COLON + String.valueOf(task.getPriority()));
-            holder.progress.setText(PROGRESS + COLON + String.valueOf(task.getProgress()) + "%");
+            holder.title.setText(TITLE_1 + COLON + task.getTitle());
+            holder.description.setText(DESCRIPTION_1 + COLON + task.getDescription());
+            holder.priority.setText(PRIORITY_1 + COLON + String.valueOf(task.getPriority()));
+            holder.progress.setText(PROGRESS_1 + COLON + String.valueOf(task.getProgress()) + "%");
             holder.progressText.setText(task.getProgress() + " %");
             holder.progressBar.setProgress((Integer.parseInt(String.valueOf(task.getProgress()))));
-
-            // data DO > aktualna data w epoch
 
             // data from created task
             Log.d("adapter", String.valueOf(date));
 
-//
-// use correct format ('S' for milliseconds)
             DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy.MM.dd");
-// convert to timezone
-            // godzina do tylu
             ZonedDateTime z = instant.atZone(ZoneId.of("Europe/London"));
-// format
             String formatted = z.format(formatter);
-//
             Log.d("adapter", String.valueOf(formatted));
 
             Date date1 = new Date(date);
-            //// TODO: 01/05/2022
-//        holder.date.setText(DATE + COLON + date1.getDay() + "-" + date1.getMonth()  +"-2022");
             holder.date.setText(formatted);
         } else {
             Log.d("adapter", "nothing to display data too much");
@@ -165,9 +134,9 @@ public class TaskAdapter extends ListAdapter<Task, TaskAdapter.TaskViewHolder> {
             taskRepository.deleteTask(task);
         }
     }
-
+    //compare task
     static {
-        TASK_DIFFERENCE = new DiffUtil.ItemCallback<Task>() {
+        TASK_DIFFERENCE = new ItemCallback<Task>() {
             @Override
             public boolean areItemsTheSame(Task oldItem, Task newItem) {
                 return oldItem.getId() == newItem.getId();
@@ -184,13 +153,13 @@ public class TaskAdapter extends ListAdapter<Task, TaskAdapter.TaskViewHolder> {
         };
     }
 
+    //Counter
     @Override
     public TaskViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
         View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.task, parent, false);
 
         Intent intent = new Intent("custom-message");
-        //            intent.putExtra("quantity",Integer.parseInt(quantity.getText().toString()));
-        intent.putExtra("count",String.valueOf(count));
+        intent.putExtra("count", String.valueOf(count));
         LocalBroadcastManager.getInstance(parent.getContext()).sendBroadcast(intent);
 
 
